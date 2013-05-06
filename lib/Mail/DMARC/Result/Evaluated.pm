@@ -1,4 +1,7 @@
 package Mail::DMARC::Result::Evaluated;
+{
+  $Mail::DMARC::Result::Evaluated::VERSION = '0.131260';
+}
 # ABSTRACT: the results of applying a DMARC policy
 use strict;
 use warnings;
@@ -68,8 +71,17 @@ sub result {
 
 1;
 
-__END__
-sub {}
+
+
+=pod
+
+=head1 NAME
+
+Mail::DMARC::Result::Evaluated - the results of applying a DMARC policy
+
+=head1 VERSION
+
+version 0.131260
 
 =head1 OVERVIEW
 
@@ -134,4 +146,30 @@ The following reason types are defined:
 
 Whether the message passed the DMARC test. In order to pass, at least one of the defined authentication alignments must pass. At present (in 2013) the defined alignments are DKIM and SPF. Possible values are: pass, fail.
 
+=head1 AUTHORS
+
+=over 4
+
+=item *
+
+Matt Simerson <msimerson@cpan.org>
+
+=item *
+
+Davide Migliavacca <davide.migliavacca@contactlab.com>
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2013 by The Network People, Inc..
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
 =cut
+
+
+__END__
+sub {}
+

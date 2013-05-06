@@ -1,4 +1,7 @@
 package Mail::DMARC::DNS;
+{
+  $Mail::DMARC::DNS::VERSION = '0.131260';
+}
 # ABSTRACT: DNS functions for DMARC
 
 use strict;
@@ -100,3 +103,38 @@ sub is_valid_domain {
 };
 
 1;
+
+__END__
+=pod
+
+=head1 NAME
+
+Mail::DMARC::DNS - DNS functions for DMARC
+
+=head1 VERSION
+
+version 0.131260
+
+=head1 AUTHORS
+
+=over 4
+
+=item *
+
+Matt Simerson <msimerson@cpan.org>
+
+=item *
+
+Davide Migliavacca <davide.migliavacca@contactlab.com>
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2013 by The Network People, Inc..
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut
+

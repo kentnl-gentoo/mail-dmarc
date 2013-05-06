@@ -1,4 +1,7 @@
 package Mail::DMARC::Policy;
+{
+  $Mail::DMARC::Policy::VERSION = '0.131260';
+}
 # ABSTRACT: a DMARC policy in object format
 
 use strict;
@@ -139,8 +142,17 @@ sub is_valid {
 
 1;
 
-__END__
-sub {}
+
+
+=pod
+
+=head1 NAME
+
+Mail::DMARC::Policy - a DMARC policy in object format
+
+=head1 VERSION
+
+version 0.131260
 
 =head1 EXAMPLES
 
@@ -156,7 +168,6 @@ Or in a more perlish fashion:
 
     my $res = Net::DNS::Resolver->new(dnsrch => 0);
     $res->send('_dmarc.example.com', 'TXT');
-
 
 =head1 USAGE
 
@@ -220,7 +231,6 @@ via DNS.
  rf=afrf;     (report format: afrf, iodef)
  ri=8400;     (report interval)
  pct=50;      (percent of messages to filter)
-
 
 =head2 Tags in Detail
 
@@ -370,4 +380,30 @@ nothing" is recognized as preventing many organizations from
 experimenting with strong authentication-based mechanisms.  See
 Section 7.1 for details.
 
+=head1 AUTHORS
+
+=over 4
+
+=item *
+
+Matt Simerson <msimerson@cpan.org>
+
+=item *
+
+Davide Migliavacca <davide.migliavacca@contactlab.com>
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2013 by The Network People, Inc..
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
 =cut
+
+
+__END__
+sub {}
+

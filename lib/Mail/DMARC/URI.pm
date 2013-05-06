@@ -1,4 +1,7 @@
 package Mail::DMARC::URI;
+{
+  $Mail::DMARC::URI::VERSION = '0.131260';
+}
 # ABSTRACT: a DMARC reporting URI
 use strict;
 use warnings;
@@ -6,14 +9,18 @@ use warnings;
 
 1;
 
-=head1 SIZE LIMIT
 
-A size limitation in a dmarc-uri, if provided, is interpreted as a
-count of units followed by an OPTIONAL unit size ("k" for kilobytes,
-"m" for megabytes, "g" for gigabytes, "t" for terabytes).  Without a
-unit, the number is presumed to be a basic byte count.  Note that the
-units are considered to be powers of two; a kilobyte is 2^10, a
-megabyte is 2^20, etc.
+
+__END__
+=pod
+
+=head1 NAME
+
+Mail::DMARC::URI - a DMARC reporting URI
+
+=head1 VERSION
+
+version 0.131260
 
 =head1 DESCRIPTION
 
@@ -42,6 +49,36 @@ report be sent via email to "reports@example.com" so long as the
 report payload does not exceed 50 megabytes.
 
 A formal definition is provided in Section 6.3.
+
+=head1 SIZE LIMIT
+
+A size limitation in a dmarc-uri, if provided, is interpreted as a
+count of units followed by an OPTIONAL unit size ("k" for kilobytes,
+"m" for megabytes, "g" for gigabytes, "t" for terabytes).  Without a
+unit, the number is presumed to be a basic byte count.  Note that the
+units are considered to be powers of two; a kilobyte is 2^10, a
+megabyte is 2^20, etc.
+
+=head1 AUTHORS
+
+=over 4
+
+=item *
+
+Matt Simerson <msimerson@cpan.org>
+
+=item *
+
+Davide Migliavacca <davide.migliavacca@contactlab.com>
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2013 by The Network People, Inc..
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
 
 =cut
 

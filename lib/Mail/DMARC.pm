@@ -1,4 +1,7 @@
 package Mail::DMARC;
+{
+  $Mail::DMARC::VERSION = '0.131260';
+}
 # ABSTRACT: Perl implementation of DMARC
 use strict;
 use warnings;
@@ -7,13 +10,6 @@ use Carp;
 
 use Mail::DMARC::DNS;
 
-=head1 SYNOPSIS
-
-DMARC: Domain-based Message Authentication, Reporting and Conformance
-
-A reliable means to authenticate who mail is from, at internet scale.
-
-=cut
 
 sub new {
     my ($class, @args) = @_;
@@ -135,8 +131,31 @@ sub validate {
 
 1;
 
-__END__
-sub {}  # for vim automatic code folding
+
+
+=pod
+
+=head1 NAME
+
+Mail::DMARC - Perl implementation of DMARC
+
+=head1 VERSION
+
+version 0.131260
+
+=head1 SYNOPSIS
+
+DMARC: Domain-based Message Authentication, Reporting and Conformance
+
+A reliable means to authenticate who mail is from, at internet scale.
+
+=head1 DESCRIPTION
+
+Determine if:
+
+    a. the header_from domain exists
+    b. the header_from domain publishes a DMARC policy
+    c. does the message conform to the published policy?
 
 =head1 CLASSES
 
@@ -169,14 +188,6 @@ L<Mail::DMARC::URI> - a DMARC reporting URI
 =back
 
 L<Mail::DMARC::libopendmarc|http://search.cpan.org/~shari/Mail-DMARC-opendmarc> - an XS implementation using libopendmarc
-
-=head1 DESCRIPTION
-
-Determine if:
-
-    a. the header_from domain exists
-    b. the header_from domain publishes a DMARC policy
-    c. does the message conform to the published policy?
 
 =head1 METHODS
 
@@ -309,4 +320,30 @@ The scope of the checked domain: mfrom, helo
 
 The SPF result code: none, neutral, pass, fail, softfail, temperror, or permerror.
 
+=head1 AUTHORS
+
+=over 4
+
+=item *
+
+Matt Simerson <msimerson@cpan.org>
+
+=item *
+
+Davide Migliavacca <davide.migliavacca@contactlab.com>
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2013 by The Network People, Inc..
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
 =cut
+
+
+__END__
+sub {}  # for vim automatic code folding
+

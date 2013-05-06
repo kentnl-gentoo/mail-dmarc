@@ -1,7 +1,25 @@
 package Mail::DMARC::Report;
+{
+  $Mail::DMARC::Report::VERSION = '0.131260';
+}
 # ABSTRACT: A DMARC report object
 use strict;
 use warnings;
+
+
+
+1;
+
+__END__
+=pod
+
+=head1 NAME
+
+Mail::DMARC::Report - A DMARC report object
+
+=head1 VERSION
+
+version 0.131260
 
 =head1 SYNOPSIS
 
@@ -193,7 +211,26 @@ can be used to seek assistance.
 possible registration of a new media type, will be added here when
 more operational experience is acquired.]
 
+=head1 AUTHORS
+
+=over 4
+
+=item *
+
+Matt Simerson <msimerson@cpan.org>
+
+=item *
+
+Davide Migliavacca <davide.migliavacca@contactlab.com>
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2013 by The Network People, Inc..
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
 =cut
 
-
-1;
