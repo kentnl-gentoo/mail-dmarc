@@ -1,5 +1,5 @@
 package Mail::DMARC::Report::Send::SMTP;
-our $VERSION = '1.20141230'; # VERSION
+our $VERSION = '1.20150123'; # VERSION
 use strict;
 use warnings;
 
@@ -108,6 +108,9 @@ sub get_subject {
     my $rid = $$agg_ref->metadata->report_id || time;
     my $id = POSIX::strftime( "%Y.%m.%d.", localtime ) . $rid;
     my $us = $self->config->{organization}{domain};
+    if ($us eq 'example.com') {
+        die "Please update mail-dmarc.ini";
+    }
     my $pol_dom = $$agg_ref->policy_published->domain;
     return "Report Domain: $pol_dom Submitter: $us Report-ID:$id";
 }
@@ -225,7 +228,7 @@ Mail::DMARC::Report::Send::SMTP - utility methods for sending reports via SMTP
 
 =head1 VERSION
 
-version 1.20141230
+version 1.20150123
 
 =head2 SUBJECT FIELD
 
@@ -303,7 +306,7 @@ Davide Migliavacca <shari@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Matt Simerson.
+This software is copyright (c) 2015 by Matt Simerson.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

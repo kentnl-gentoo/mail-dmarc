@@ -1,5 +1,5 @@
 package Mail::DMARC::Report::Store::SQL;
-our $VERSION = '1.20141230'; # VERSION
+our $VERSION = '1.20150123'; # VERSION
 use strict;
 use warnings;
 
@@ -440,7 +440,7 @@ sub row_exists {
     my ($self, $rid, $rec ) = @_;
 
     if ( ! defined $rec->{row}{count} ) {
-        carp "\tnew record";
+        print "new record\n" if $self->verbose;
         return;
     };
 
@@ -582,7 +582,7 @@ EO_RPP
     return $self->query( $query,
         [ $id, @$pub{ qw/ adkim aspf p sp pct rua /} ]
     )
-    or croak "failed to insert published policy";
+    || croak "failed to insert published policy";
 }
 
 sub db_connect {
@@ -724,7 +724,7 @@ Mail::DMARC::Report::Store::SQL - store and retrieve reports from a SQL RDBMS
 
 =head1 VERSION
 
-version 1.20141230
+version 1.20150123
 
 =head1 DESCRIPTION
 
@@ -754,7 +754,7 @@ Davide Migliavacca <shari@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Matt Simerson.
+This software is copyright (c) 2015 by Matt Simerson.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

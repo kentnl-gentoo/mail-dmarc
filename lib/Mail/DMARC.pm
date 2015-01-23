@@ -1,5 +1,5 @@
 package Mail::DMARC;
-our $VERSION = '1.20141230'; # VERSION
+our $VERSION = '1.20150123'; # VERSION
 use strict;
 use warnings;
 
@@ -47,9 +47,24 @@ sub local_policy {
     return $_[0]->{local_policy} = $_[1];
 }
 
+sub _unwrap {
+    my ( $self, $ref ) = @_;
+    if (ref $$ref and ref $$ref eq 'CODE') {
+        $$ref = $$ref->();
+        return 1;
+    }
+    return;
+}
+
 sub dkim {
     my ( $self, @args ) = @_;
-    return $self->{dkim} if 0 == scalar @args;
+
+    if (0 == scalar @args) {
+      $self->is_valid_dkim if $self->_unwrap( \$self->{dkim} );
+      return $self->{dkim};
+    }
+
+    $self->{dkim} ||= [];
 
     if ( scalar @args > 1 ) {
         croak "invalid arguments to dkim" if @args % 2;
@@ -78,6 +93,11 @@ sub dkim {
         return $self->{dkim};
     };
 
+    if ( 'CODE' eq ref $dkim ) {
+        $self->{dkim} = $dkim;
+        return $self->{dkim}; # <-- may confuse people not thinking straight
+    };
+
     croak "invalid dkim argument";
 }
 
@@ -87,6 +107,11 @@ sub dkim_from_mail_dkim {
     # A DKIM verifier will have result and signature methods.
     foreach my $s ( $dkim->signatures ) {
         next if ref $s eq 'Mail::DKIM::DkSignature';
+
+        if ($s->{result} eq 'invalid') {  # See GH Issue #21
+            $s->{result} = 'temperror';
+        }
+
         push @{ $self->{dkim} },
             {
             domain       => $s->domain,
@@ -100,7 +125,13 @@ sub dkim_from_mail_dkim {
 
 sub spf {
     my ( $self, @args ) = @_;
-    return $self->{spf} if 0 == scalar @args;
+
+    if (0 == scalar @args) {
+      $self->is_valid_spf if $self->_unwrap( \$self->{spf} );
+      return $self->{spf}
+    }
+
+    $self->{spf} ||= [];
 
     if ( scalar @args == 1 && ref $args[0] ) {
         if ( ref $args[0] eq 'HASH' ) {
@@ -108,6 +139,10 @@ sub spf {
             return $self->{spf};
         };
         if ( ref $args[0] eq 'ARRAY' ) {
+            $self->{spf} = $args[0];
+            return $self->{spf};
+        }
+        if ( ref $args[0] eq 'CODE' ) {
             $self->{spf} = $args[0];
             return $self->{spf};
         }
@@ -235,7 +270,7 @@ Mail::DMARC - Perl implementation of DMARC
 
 =head1 VERSION
 
-version 1.20141230
+version 1.20150123
 
 =head1 SYNOPSIS
 
@@ -359,11 +394,17 @@ Populate it.
     $dmarc->envelope_from('sender.example.com');
     $dmarc->header_from('sender.example.com');
     $dmarc->dkim( $dkim_verifier );
-    $dmarc->spf(
-        domain => 'example.com',
-        scope  => 'mfrom',
-        result => 'pass',
-            );
+    $dmarc->spf([
+        {   domain => 'example.com',
+            scope  => 'mfrom',
+            result => 'pass',
+        },
+        {
+            scope  => 'helo',
+            domain => 'mta.example.com',
+            result => 'fail',
+        },
+    ]);
 
 Run the request:
 
@@ -527,7 +568,7 @@ Best Current Practices: http://tools.ietf.org/html/draft-crocker-dmarc-bcp-03
 
 The daddy of this perl module was a DMARC module for the qpsmtpd MTA.
 
-Qpsmtpd plugin: https://github.com/qpsmtpd-dev/qpsmtpd-dev/blob/master/plugins/dmarc
+Qpsmtpd plugin: https://github.com/smtpd/qpsmtpd/blob/master/plugins/dmarc
 
 =head1 AUTHORS
 
@@ -565,11 +606,15 @@ Marc Bradshaw <marc@marcbradshaw.net>
 
 Ricardo Signes <rjbs@cpan.org>
 
+=item *
+
+Ricardo Signes <rjbs@users.noreply.github.com>
+
 =back
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Matt Simerson.
+This software is copyright (c) 2015 by Matt Simerson.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

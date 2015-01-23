@@ -4,7 +4,7 @@ Mail::DMARC - Perl implementation of DMARC
 
 # VERSION
 
-version 1.20141230
+version 1.20150123
 
 # SYNOPSIS
 
@@ -103,11 +103,17 @@ Populate it.
     $dmarc->envelope_from('sender.example.com');
     $dmarc->header_from('sender.example.com');
     $dmarc->dkim( $dkim_verifier );
-    $dmarc->spf(
-        domain => 'example.com',
-        scope  => 'mfrom',
-        result => 'pass',
-            );
+    $dmarc->spf([
+        {   domain => 'example.com',
+            scope  => 'mfrom',
+            result => 'pass',
+        },
+        {
+            scope  => 'helo',
+            domain => 'mta.example.com',
+            result => 'fail',
+        },
+    ]);
 
 Run the request:
 
@@ -259,7 +265,7 @@ Best Current Practices: http://tools.ietf.org/html/draft-crocker-dmarc-bcp-03
 
 The daddy of this perl module was a DMARC module for the qpsmtpd MTA.
 
-Qpsmtpd plugin: https://github.com/qpsmtpd-dev/qpsmtpd-dev/blob/master/plugins/dmarc
+Qpsmtpd plugin: https://github.com/smtpd/qpsmtpd/blob/master/plugins/dmarc
 
 # AUTHORS
 
@@ -272,10 +278,11 @@ Qpsmtpd plugin: https://github.com/qpsmtpd-dev/qpsmtpd-dev/blob/master/plugins/d
 - ColocateUSA.net <company@colocateusa.net>
 - Marc Bradshaw <marc@marcbradshaw.net>
 - Ricardo Signes <rjbs@cpan.org>
+- Ricardo Signes <rjbs@users.noreply.github.com>
 
 # COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Matt Simerson.
+This software is copyright (c) 2015 by Matt Simerson.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
