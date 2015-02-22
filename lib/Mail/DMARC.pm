@@ -1,9 +1,10 @@
 package Mail::DMARC;
-our $VERSION = '1.20150211'; # VERSION
+our $VERSION = '1.20150222'; # VERSION
 use strict;
 use warnings;
 
 use Carp;
+our $psl_loads = 0;
 
 use parent 'Mail::DMARC::Base';
 require Mail::DMARC::Policy;
@@ -18,7 +19,6 @@ sub new {
     my %args = @args;
     my $self = bless {
         config_file => 'mail-dmarc.ini',
-        public_suffixes => {},
         }, $class;
 
     foreach my $key ( keys %args ) {
@@ -245,7 +245,7 @@ Mail::DMARC - Perl implementation of DMARC
 
 =head1 VERSION
 
-version 1.20150211
+version 1.20150222
 
 =head1 SYNOPSIS
 
