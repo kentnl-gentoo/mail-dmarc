@@ -1,5 +1,5 @@
 package Mail::DMARC::Policy;
-our $VERSION = '1.20150222'; # VERSION
+our $VERSION = '1.20150228'; # VERSION
 use strict;
 use warnings;
 
@@ -31,7 +31,7 @@ sub parse {
     my @tag_vals = split /;/, $str;
     my %policy;
     foreach my $tv (@tag_vals) {
-        my ($tag, $value) = split /=/, $tv, 2;
+        my ($tag, $value) = split /=|:/, $tv, 2;
         if ( !defined $tag || !defined $value || $value eq '') {
             warn "invalid DMARC record, please post this message to\n" .
                  "\thttps://github.com/msimerson/mail-dmarc/issues/39\n" .
@@ -183,7 +183,7 @@ Mail::DMARC::Policy - a DMARC policy in object format
 
 =head1 VERSION
 
-version 1.20150222
+version 1.20150228
 
 =head1 SYNOPSIS
 

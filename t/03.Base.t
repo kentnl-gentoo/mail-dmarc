@@ -177,6 +177,6 @@ sub __get_sharefile {
 }
 
 sub __psl_cached {
-    no warnings;
+    no warnings 'once';
     cmp_ok($Mail::DMARC::psl_loads, '==', 1, 'Public Suffix List cached');
 }

@@ -1,5 +1,5 @@
 package Mail::DMARC::Base;
-our $VERSION = '1.20150222'; # VERSION
+our $VERSION = '1.20150228'; # VERSION
 use strict;
 use warnings;
 
@@ -58,7 +58,7 @@ sub get_config {
     if ($file ne 'mail-dmarc.ini') {
         croak "unable to find requested config file $file\n";
     }
-    return $self->get_sharefile('mail-dmarc.ini');
+    return Config::Tiny->read( $self->get_sharefile('mail-dmarc.ini') );
 }
 
 sub any_inet_ntop {
@@ -90,7 +90,7 @@ sub any_inet_pton {
     sub get_public_suffix_list {
         my ( $self ) = @_;
         if ( $public_suffixes ) { return $public_suffixes; }
-        no warnings;
+        no warnings 'once';
         $Mail::DMARC::psl_loads++;
         my $file = $self->find_psl_file();
         my $fh = IO::File->new( $file, 'r' )
@@ -292,7 +292,7 @@ Mail::DMARC::Base - DMARC utility functions
 
 =head1 VERSION
 
-version 1.20150222
+version 1.20150228
 
 =head1 METHODS
 
