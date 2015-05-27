@@ -1,5 +1,5 @@
 package Mail::DMARC::Base;
-our $VERSION = '1.20150317'; # VERSION
+our $VERSION = '1.20150527'; # VERSION
 use strict;
 use warnings;
 
@@ -87,12 +87,16 @@ sub any_inet_pton {
 
 {
     my $public_suffixes;
+    my $public_suffixes_stamp;
+
     sub get_public_suffix_list {
         my ( $self ) = @_;
         if ( $public_suffixes ) { return $public_suffixes; }
         no warnings 'once';
         $Mail::DMARC::psl_loads++;
         my $file = $self->find_psl_file();
+        $public_suffixes_stamp = ( stat( $file ) )[9];
+
         my $fh = IO::File->new( $file, 'r' )
             or croak "unable to open $file for read: $!\n";
         # load PSL into hash for fast lookups, esp. for long running daemons
@@ -102,7 +106,20 @@ sub any_inet_pton {
                   <$fh>;
         return $public_suffixes = \%psl;
     }
-}
+
+    sub check_public_suffix_list {
+        my ( $self ) = @_;
+        my $file = $self->find_psl_file();
+        my $new_public_suffixes_stamp = ( stat( $file ) )[9];
+        if ( $new_public_suffixes_stamp != $public_suffixes_stamp ) {
+            $public_suffixes = undef;
+            $self->get_public_suffix_list();
+            return 1;
+        }
+        return 0;
+     }
+
+ }
 
 sub is_public_suffix {
     my ( $self, $zone ) = @_;
@@ -233,7 +250,7 @@ sub is_valid_ip {
 
     # Using Regexp::Common removes perl 5.8 compat
     # Perl 5.008009 does not support the pattern $RE{net}{IPv6}.
-    # You need Perl 5.01 or later at lib/Mail/DMARC/DNS.pm line 83.
+    # You need Perl 5.01 or later
 
     if ( $ip =~ /:/ ) {
         return Net::IP->new( $ip, 6 );
@@ -292,7 +309,7 @@ Mail::DMARC::Base - DMARC utility functions
 
 =head1 VERSION
 
-version 1.20150317
+version 1.20150527
 
 =head1 METHODS
 
