@@ -1,5 +1,5 @@
 package Mail::DMARC::Report::Aggregate::Metadata;
-our $VERSION = '1.20150527'; # VERSION
+our $VERSION = '1.20150908'; # VERSION
 use strict;
 use warnings;
 
@@ -54,10 +54,9 @@ sub uuid {
 
 sub as_xml {
     my $self = shift;
-    my $meta = "\t<report_metadata>\n\t\t<report_id>"
-             . $self->report_id . "</report_id>\n";
+    my $meta = "\t<report_metadata>\n";
 
-    foreach my $f (qw/ org_name email extra_contact_info /) {
+    foreach my $f (qw/ org_name email extra_contact_info report_id /) {
         my $val = $self->$f or next;
         $meta .= "\t\t<$f>$val</$f>\n";
     }
@@ -85,7 +84,7 @@ Mail::DMARC::Report::Aggregate::Metadata - metadata section of aggregate report
 
 =head1 VERSION
 
-version 1.20150527
+version 1.20150908
 
 =head1 AUTHORS
 

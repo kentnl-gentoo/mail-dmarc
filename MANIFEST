@@ -44,7 +44,6 @@ lib/Mail/DMARC/Report/Store/SQL.pm
 lib/Mail/DMARC/Report/URI.pm
 lib/Mail/DMARC/Result.pm
 lib/Mail/DMARC/Result/Reason.pm
-share/dmarc-report-2013-draft.xsd
 share/dmarc_whitelist
 share/html/css/ellipsis-xbl.xml
 share/html/css/ui.jqgrid.css
@@ -108,6 +107,7 @@ share/mail-dmarc.ini
 share/mail_dmarc_schema.mysql
 share/mail_dmarc_schema.sqlite
 share/public_suffix_list
+share/rua-schema.xsd
 t/00.Dmarc.t
 t/01.Policy.t
 t/03.Base.t
@@ -121,6 +121,7 @@ t/13.Report.Aggregate.t
 t/14.Report.Aggregate.Metadata.t
 t/15.Report.Aggregate.Record.t
 t/16.Report.Aggregate.Record.Auth_Results.t
+t/17.Report.Aggregate.Schema.t
 t/20.Report.URI.t
 t/21.Report.Send.t
 t/22.Report.Send.SMTP.t
