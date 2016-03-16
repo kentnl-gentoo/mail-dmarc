@@ -95,7 +95,6 @@ my %module_build_args = (
     "bin/dmarc_send_reports",
     "bin/dmarc_update_public_suffix_list",
     "bin/dmarc_view_reports",
-    "bin/install_deps.pl"
   ],
   "share_dir" => {
     "dist" => "share"

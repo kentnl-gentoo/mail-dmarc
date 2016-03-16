@@ -17,7 +17,6 @@ bin/dmarc_receive
 bin/dmarc_send_reports
 bin/dmarc_update_public_suffix_list
 bin/dmarc_view_reports
-bin/install_deps.pl
 dist.ini
 example/report_cgi.png
 lib/Mail/DMARC.pm
