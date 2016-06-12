@@ -1,5 +1,5 @@
 package Mail::DMARC::PurePerl;
-our $VERSION = '1.20150908'; # VERSION
+our $VERSION = '1.20160612'; # VERSION
 use strict;
 use warnings;
 
@@ -41,11 +41,7 @@ sub validate {
     my $aligned = $self->is_aligned(); # 11.2.5. identifier alignment checks
 
     if ($self->config->{report_store}{auto_save}) {
-        my $pol;
-        eval { $pol = $self->result->published; };
-        if ( $pol && $self->has_valid_reporting_uri($pol->rua) ) {
-            eval { $self->save_aggregate(); };
-        };
+        eval { $self->save_aggregate(); };
     }
 
     return $self->result if $aligned;
@@ -89,6 +85,26 @@ sub validate {
     return $self->result;
 }
 
+sub save_aggregate {
+    my ( $self ) = @_;
+
+    my $pol;
+    eval { $pol = $self->result->published; };
+    if ( $pol && $self->has_valid_reporting_uri($pol->rua) ) {
+        my @valid_report_uris = $self->get_valid_reporting_uri($pol->rua);
+
+        my $filtered_report_uris = join( ',',
+            map { $_->{'uri'} . ( ( $_->{'max_bytes'} > 0 ) ? ( '!' . $$_->{'max_bytes'} ) : q{} ) }
+                @valid_report_uris
+        );
+
+        $self->result->published->rua( $filtered_report_uris );
+
+        return $self->SUPER::save_aggregate();
+    }
+    return;
+}
+
 sub discover_policy {
     my $self     = shift;
     my $from_dom = shift || $self->header_from or croak;
@@ -98,6 +114,7 @@ sub discover_policy {
     # 9.1  Mail Receivers MUST query the DNS for a DMARC TXT record
     my ($matches, $at_dom) = $self->fetch_dmarc_record( $from_dom, $org_dom );
     if (0 == scalar @$matches ) {
+        $self->result->result('none');
         $self->result->reason( type => 'other', comment => 'no policy' );
         return;
     };
@@ -293,6 +310,12 @@ sub is_whitelisted {
 
 sub has_valid_reporting_uri {
     my ( $self, $rua ) = @_;
+    my @valid_reporting_uris = $self->get_valid_reporting_uri( $rua );
+    return scalar @valid_reporting_uris;
+}
+
+sub get_valid_reporting_uri {
+    my ( $self, $rua ) = @_;
     return unless $rua;
     my $recips_ref = $self->report->uri->parse($rua);
     my @has_permission;
@@ -302,10 +325,9 @@ sub has_valid_reporting_uri {
             next;
         }
         my $ext = $self->verify_external_reporting($uri_ref);
-        push @has_permission, $ext if $ext;
+        push @has_permission, $uri_ref if $ext;
     }
-    return @has_permission if wantarray;
-    return scalar @has_permission;
+    return @has_permission;
 }
 
 sub get_dkim_pass_sigs {
@@ -364,8 +386,11 @@ sub exists_in_dns {
     my $self = shift;
     my $from_dom = shift || $self->header_from or croak "no header_from!";
 
-  # 9.6 # If the RFC5322.From domain does not exist in the DNS, Mail Receivers
-  #     SHOULD direct the receiving SMTP server to reject the message {R9}.
+  # rfc7489 6.6.3
+  #     If the set produced by the mechanism above contains no DMARC policy
+  #     record (i.e., any indication that there is no such record as opposed
+  #     to a transient DNS error), Mail Receivers SHOULD NOT apply the DMARC
+  #     mechanism to the message.
 
     my $org_dom = $self->get_organizational_domain($from_dom);
     my @todo    = $from_dom;
@@ -382,7 +407,8 @@ sub exists_in_dns {
         $matched++ and next if $self->has_dns_rr( 'AAAA', $_ );
     }
     if ( !$matched ) {
-        $self->result->disposition('reject');
+        $self->result->result('none');
+        $self->result->disposition('none');
         $self->result->reason(
             type    => 'other',
             comment => "$from_dom not in DNS"
@@ -559,7 +585,7 @@ Mail::DMARC::PurePerl - Pure Perl implementation of DMARC
 
 =head1 VERSION
 
-version 1.20150908
+version 1.20160612
 
 =head1 METHODS
 

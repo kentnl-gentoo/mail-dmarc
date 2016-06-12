@@ -1,5 +1,5 @@
 package Mail::DMARC::Result;
-our $VERSION = '1.20150908'; # VERSION
+our $VERSION = '1.20160612'; # VERSION
 use strict;
 use warnings;
 
@@ -72,7 +72,7 @@ sub spf_align {
 
 sub result {
     return $_[0]->{result} if 1 == scalar @_;
-    croak "invalid result" if 0 == grep {/^$_[1]$/ix} qw/ pass fail /;
+    croak "invalid result" if 0 == grep {/^$_[1]$/ix} qw/ pass fail none /;
     return $_[0]->{result} = $_[1];
 }
 
@@ -97,7 +97,7 @@ Mail::DMARC::Result - an aggregate report result object
 
 =head1 VERSION
 
-version 1.20150908
+version 1.20160612
 
 =head1 OVERVIEW
 
